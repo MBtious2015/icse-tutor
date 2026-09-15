@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICSE AI Tutor - DPS Megacity Kolkata</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --surface-0: #f5f5f5;
+      --surface-1: #ffffff;
+      --surface-2: #f9f9f9;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --text-accent: #2563eb;
+      --text-danger: #dc2626;
+      --text-success: #16a34a;
+      --text-warning: #d97706;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.2);
+      --fill-accent: #2563eb;
+      --on-accent: #ffffff;
+      --fill-success: #16a34a;
+      --on-success: #ffffff;
+      --fill-danger: #dc2626;
+      --on-danger: #ffffff;
+      --bg-accent-muted: rgba(37, 99, 235, 0.1);
+      --bg-success: rgba(22, 163, 74, 0.1);
+      --bg-danger: rgba(220, 38, 38, 0.1);
+      --bg-warning: rgba(217, 119, 6, 0.1);
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-0: #1a1a1a;
+        --surface-1: #2d2d2d;
+        --surface-2: #3d3d3d;
+        --text-primary: #f5f5f5;
+        --text-secondary: #b0b0b0;
+        --text-muted: #808080;
+        --border: rgba(255,255,255,0.1);
+        --border-strong: rgba(255,255,255,0.2);
+        --bg-accent-muted: rgba(37, 99, 235, 0.15);
+        --bg-success: rgba(22, 163, 74, 0.15);
+        --bg-danger: rgba(220, 38, 38, 0.15);
+        --bg-warning: rgba(217, 119, 6, 0.15);
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--surface-0);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--surface-2);
+      border-right: 0.5px solid var(--border);
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 0 1rem 1rem;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-header h1 {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0 0 4px;
+    }
+
+    .sidebar-header p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 2px 0 0;
+    }
+
+    .nav-btn {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 13px;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+      font-weight: 400;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-primary);
+      background: var(--surface-1);
+    }
+
+    .nav-btn.active {
+      border-left-color: var(--fill-accent);
+      color: var(--text-primary);
+      background: var(--surface-1);
+    }
+
+    .nav-btn i {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+
+    .sidebar-stats {
+      margin-top: auto;
+      padding: 0.75rem 1rem;
+      border-top: 0.5px solid var(--border);
+      background: var(--bg-accent-muted);
+      border-radius: var(--radius);
+      margin: 1rem;
+    }
+
+    .sidebar-stats .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .sidebar-stats .stat-value {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-accent);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background: var(--surface-0);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--text-accent);
+      cursor: pointer;
+      font-size: 13px;
+      margin-bottom: 1rem;
+      padding: 0;
+    }
+
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 0 0 1.5rem;
+      color: var(--text-primary);
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 1rem;
+      color: var(--text-primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .card:hover {
+      border-color: var(--border-strong);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .lesson-card, .problem-card {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .lesson-title {
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0 0 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .lesson-subject {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 0 0 1.5rem;
+    }
+
+    .lesson-content {
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-size: 14px;
+    }
+
+    .problem-text {
+      background: var(--surface-1);
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .problem-counter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .counter-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 13px;
+      background: var(--surface-1);
+      color: var(--text-primary);
+      box-sizing: border-box;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+      outline: none;
+      border-color: var(--fill-accent);
+      box-shadow: 0 0 0 2px var(--bg-accent-muted);
+    }
+
+    .error-text {
+      color: var(--text-danger);
+      font-size: 12px;
+      margin-top: 0.4rem;
+      display: none;
+    }
+
+    .feedback {
+      display: none;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      font-size: 13px;
+    }
+
+    .feedback.success {
+      background: var(--bg-success);
+      color: var(--text-success);
+    }
+
+    .feedback.danger {
+      background: var(--bg-danger);
+      color: var(--text-danger);
+    }
+
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 13px;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: var(--surface-1);
+      color: var(--text-primary);
+      border: 0.5px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-2);
+    }
+
+    .btn-success {
+      background: var(--fill-success);
+      color: var(--on-success);
+    }
+
+    .btn-success:hover {
+      opacity: 0.9;
+    }
+
+    .btn + .btn {
+      margin-left: 0.5rem;
+    }
+
+    .warning-banner {
+      background: var(--bg-warning);
+      border-left: 3px solid var(--text-warning);
+      padding: 0.6rem 0.85rem;
+      border-radius: 0;
+      margin-bottom: 1rem;
+      font-size: 12px;
+      color: var(--text-warning);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-card-value {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-card-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: var(--surface-0);
+    }
+
+    .login-card {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .login-card h1 {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 0 0 0.5rem;
+      text-align: center;
+    }
+
+    .login-card p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 0 0 1.5rem;
+    }
+
+    .login-card input {
+      margin-bottom: 1rem;
+    }
+
+    .login-card .btn {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: 0.5px solid var(--border);
+      background: var(--surface-1);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border-color: var(--fill-accent);
+    }
+
+    .badge {
+      background: var(--bg-accent-muted);
+      color: var(--text-accent);
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius);
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+        padding: 1rem 0;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login View -->
+  <div id="login-view" class="login-container">
+    <div class="login-card">
+      <h1>ICSE Tutor</h1>
+      <p>DPS Megacity Kolkata</p>
+      
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+        <button class="tab-btn" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-form">
+        <input type="email" id="login-email" placeholder="Email address">
+        <input type="password" id="login-password" placeholder="Password">
+        <div class="error-text" id="login-error"></div>
+        <button class="btn btn-primary" onclick="handleLogin()" style="width: 100%; text-align: center;">Login</button>
+      </div>
+
+      <!-- Register Form -->
+      <div id="register-form" style="display: none;">
+        <input type="text" id="register-name" placeholder="Your name">
+        <input type="email" id="register-email" placeholder="Email address">
+        <input type="password" id="register-password" placeholder="Password (min 6 characters)">
+        <input type="password" id="register-confirm" placeholder="Confirm password">
+        <div class="error-text" id="register-error"></div>
+        <button class="btn btn-primary" onclick="handleRegister()" style="width: 100%; text-align: center;">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App View -->
+  <div id="app-view" style="display: none;" class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1>ICSE Tutor</h1>
+        <p id="user-name">Welcome</p>
+        <p>Class 6 • DPS Kolkata</p>
+      </div>
+
+      <button class="nav-btn active" onclick="switchView('subjects')">
+        <i class="ti ti-book"></i> Learn
+      </button>
+      <button class="nav-btn" onclick="switchView('practice')">
+        <i class="ti ti-pencil"></i> Practice
+      </button>
+      <button class="nav-btn" onclick="switchView('test')">
+        <i class="ti ti-clipboard-check"></i> Test
+      </button>
+      <button class="nav-btn" onclick="switchView('dashboard')">
+        <i class="ti ti-chart-bar"></i> Progress
+      </button>
+
+      <div class="sidebar-stats">
+        <div class="stat-label">This Week</div>
+        <div class="stat-value" id="weekly-points">0</div>
+        <div class="stat-label">points earned</div>
+      </div>
+
+      <button class="nav-btn" onclick="handleLogout()" style="margin-top: auto; color: var(--text-danger);">
+        <i class="ti ti-logout"></i> Logout
+      </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Subjects View -->
+      <div id="view-subjects" class="view active">
+        <div>
+          <h2>ICSE Class 6 Subjects</h2>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 1.5rem;">DPS Megacity Kolkata Curriculum</p>
+        </div>
+        <div class="grid">
+          <div class="card" onclick="selectSubject('mathematics')">
+            <div class="card-icon">📐</div>
+            <div class="card-title">Mathematics</div>
+            <div class="card-subtitle">Algebra, Geometry</div>
+          </div>
+          <div class="card" onclick="selectSubject('physics')">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">Physics</div>
+            <div class="card-subtitle">Force, Light, Energy</div>
+          </div>
+          <div class="card" onclick="selectSubject('chemistry')">
+            <div class="card-icon">🧪</div>
+            <div class="card-title">Chemistry</div>
+            <div class="card-subtitle">Elements, Matter</div>
+          </div>
+          <div class="card" onclick="selectSubject('biology')">
+            <div class="card-icon">🌿</div>
+            <div class="card-title">Biology</div>
+            <div class="card-subtitle">Cells, Plants, Life</div>
+          </div>
+          <div class="card" onclick="selectSubject('english')">
+            <div class="card-icon">📖</div>
+            <div class="card-title">English</div>
+            <div class="card-subtitle">Grammar, Literature</div>
+          </div>
+          <div class="card" onclick="selectSubject('history')">
+            <div class="card-icon">🏛️</div>
+            <div class="card-title">History</div>
+            <div class="card-subtitle">Civilizations, Empires</div>
+          </div>
+          <div class="card" onclick="selectSubject('civics')">
+            <div class="card-icon">🏘️</div>
+            <div class="card-title">Civics</div>
+            <div class="card-subtitle">Communities, Governance</div>
+          </div>
+          <div class="card" onclick="selectSubject('geography')">
+            <div class="card-icon">🌍</div>
+            <div class="card-title">Geography</div>
+            <div class="card-subtitle">Earth, Continents, India</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Learn View -->
+      <div id="view-learn" class="view">
+        <button class="back-btn" onclick="switchView('subjects')">← Back to subjects</button>
+        <div class="lesson-card">
+          <h3 id="lesson-title">Loading...</h3>
+          <p class="lesson-subject" id="lesson-subject">ICSE Class 6</p>
+          <div class="lesson-content" id="lesson-content">
+            <p style="color: var(--text-secondary);">Generating explanation...</p>
+          </div>
+          <button class="btn btn-primary" onclick="generateLesson()">Explain again</button>
+          <button class="btn btn-secondary" onclick="switchView('practice')">Practice</button>
+        </div>
+      </div>
+
+      <!-- Practice View -->
+      <div id="view-practice" class="view">
+        <button class="back-btn" onclick="switchView('subjects')">← Back to subjects</button>
+        <div class="problem-card">
+          <div class="problem-counter">
+            <h3 style="margin: 0;">Practice Problem</h3>
+            <div class="counter-text"><span id="problem-num">1</span> of <span id="problem-total">1</span></div>
+          </div>
+          <div class="problem-text" id="problem-text">Generating problem...</div>
+          <input type="text" id="user-answer" placeholder="Type your answer...">
+          <div class="error-text" id="answer-error"></div>
+          <div class="feedback" id="feedback"></div>
+          <button class="btn btn-primary" id="submit-btn" onclick="checkAnswer()">Check</button>
+          <button class="btn btn-success" id="next-btn" onclick="nextProblem()" style="display: none;">Next</button>
+        </div>
+      </div>
+
+      <!-- Test View -->
+      <div id="view-test" class="view">
+        <button class="back-btn" onclick="switchView('subjects')">← Back to subjects</button>
+        <div class="problem-card">
+          <div class="problem-counter">
+            <h3 style="margin: 0;">Quiz</h3>
+            <div class="counter-text"><span id="q-num">1</span> of 5</div>
+          </div>
+          <div class="warning-banner">Get all 5 correct to earn 50 bonus points!</div>
+          <div class="problem-text" id="question-text">Generating question...</div>
+          <input type="text" id="q-answer" placeholder="Type your answer...">
+          <div class="error-text" id="q-error"></div>
+          <div class="feedback" id="q-feedback"></div>
+          <button class="btn btn-primary" id="q-submit-btn" onclick="checkQuizAnswer()">Submit</button>
+          <button class="btn btn-primary" id="q-next-btn" onclick="nextQuestion()" style="display: none;">Next →</button>
+        </div>
+      </div>
+
+      <!-- Dashboard View -->
+      <div id="view-dashboard" class="view">
+        <h2>Your Progress</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-value" id="total-points">0</div>
+            <div class="stat-card-label">Total points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="correct-count">0</div>
+            <div class="stat-card-label">Correct answers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="streak-count">0</div>
+            <div class="stat-card-label">Current streak</div>
+          </div>
+        </div>
+        <div class="lesson-card">
+          <h3>Subjects studied</h3>
+          <div id="studied-subjects" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="badge">Start learning to see progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Subject topics aligned with ICSE Class 6 curriculum
+    const subjectTopics = {
+      mathematics: ['Number System', 'Fractions and Decimals', 'Ratio and Proportion', 'Algebra', 'Linear Equations', 'Set Theory', 'Geometry Basics', 'Angles and Triangles', 'Mensuration', 'Data Handling'],
+      physics: ['Force and Motion', 'Light and Optics', 'Sound Waves', 'Magnetism', 'Simple Machines', 'Energy and Power', 'Friction', 'Pressure', 'Acceleration'],
+      chemistry: ['Matter and its States', 'Elements and Compounds', 'Atoms and Molecules', 'Physical and Chemical Changes', 'Mixtures and Solutions', 'Rocks and Soil', 'Oxidation and Reduction'],
+      biology: ['Cell Structure', 'Plant Life', 'Animal Life', 'Nutrition and Digestion', 'Respiration', 'Circulation', 'Health and Hygiene', 'Reproduction', 'Photosynthesis'],
+      english: ['Parts of Speech', 'Sentence Structure', 'Tenses', 'Grammar Rules', 'Reading Comprehension', 'Essay Writing', 'Vocabulary', 'Punctuation', 'Figure of Speech'],
+      history: ['Ancient India', 'Vedic Civilization', 'Maurya Empire', 'Gupta Empire', 'Medieval India', 'Early Kingdoms', 'Trade Routes', 'Historical Figures'],
+      civics: ['Rural and Urban Communities', 'Local Governance', 'Municipal Corporation', 'Rights and Responsibilities', 'Community Services', 'Panchayat', 'Democratic Values'],
+      geography: ['Earth and Planets', 'Maps and Directions', 'Indian Geography', 'Continents', 'Oceans and Rivers', 'Kolkata Region', 'Weather and Climate', 'Natural Resources']
+    };
+
+    const subjectNames = {
+      mathematics: 'Mathematics',
+      physics: 'Physics',
+      chemistry: 'Chemistry',
+      biology: 'Biology',
+      english: 'English',
+      history: 'History & Civics',
+      civics: 'Civics',
+      geography: 'Geography'
+    };
+
+    // State management
+    let appState = {
+      currentUser: null,
+      currentSubject: '',
+      totalPoints: 0,
+      weeklyPoints: 0,
+      correctAnswers: 0,
+      currentStreak: 0,
+      subjectsStudied: new Set()
+    };
+
+    // Initialize app
+    function init() {
+      const user = localStorage.getItem('currentUser');
+      if(user) {
+        appState.currentUser = JSON.parse(user);
+        loadUserProgress();
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'flex';
+        updateUserName();
+      }
+    }
+
+    // Authentication
+    function switchTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const tabs = document.querySelectorAll('.tab-btn');
+      
+      if(tab === 'login') {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
+      }
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const errorDiv = document.getElementById('login-error');
+      
+      if(!email || !password) {
+        errorDiv.textContent = 'Please enter email and password';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if(user) {
+        appState.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        loadUserProgress();
+        errorDiv.style.display = 'none';
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'flex';
+        updateUserName();
+      } else {
+        errorDiv.textContent = 'Invalid email or password';
+        errorDiv.style.display = 'block';
+      }
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('register-name').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value.trim();
+      const confirm = document.getElementById('register-confirm').value.trim();
+      const errorDiv = document.getElementById('register-error');
+
+      if(!name || !email || !password || !confirm) {
+        errorDiv.textContent = 'Please fill in all fields';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if(password.length < 6) {
+        errorDiv.textContent = 'Password must be at least 6 characters';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if(password !== confirm) {
+        errorDiv.textContent = 'Passwords do not match';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      if(users.find(u => u.email === email)) {
+        errorDiv.textContent = 'Email already registered';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const newUser = { name, email, password, id: Date.now() };
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      appState.currentUser = newUser;
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
+      errorDiv.style.display = 'none';
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('app-view').style.display = 'flex';
+      updateUserName();
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('currentUser');
+      appState.currentUser = null;
+      document.getElementById('app-view').style.display = 'none';
+      document.getElementById('login-view').style.display = 'flex';
+      document.getElementById('login-email').value = '';
+      document.getElementById('login-password').value = '';
+      switchTab('login');
+    }
+
+    function updateUserName() {
+      document.getElementById('user-name').textContent = appState.currentUser.name;
+    }
+
+    // Progress management
+    function saveUserProgress() {
+      const progress = {
+        totalPoints: appState.totalPoints,
+        weeklyPoints: appState.weeklyPoints,
+        correctAnswers: appState.correctAnswers,
+        currentStreak: appState.currentStreak,
+        subjectsStudied: Array.from(appState.subjectsStudied)
+      };
+      localStorage.setItem(`progress_${appState.currentUser.id}`, JSON.stringify(progress));
+    }
+
+    function loadUserProgress() {
+      const progress = JSON.parse(localStorage.getItem(`progress_${appState.currentUser.id}`) || 'null');
+      if(progress) {
+        appState.totalPoints = progress.totalPoints || 0;
+        appState.weeklyPoints = progress.weeklyPoints || 0;
+        appState.correctAnswers = progress.correctAnswers || 0;
+        appState.currentStreak = progress.currentStreak || 0;
+        appState.subjectsStudied = new Set(progress.subjectsStudied || []);
+      }
+    }
+
+    // View management
+    function switchView(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${view}`).classList.add('active');
+      
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.nav-btn').classList.add('active');
+
+      if(view === 'dashboard') updateDashboard();
+    }
+
+    function selectSubject(subject) {
+      appState.currentSubject = subject;
+      appState.subjectsStudied.add(subjectNames[subject]);
+      document.getElementById('view-subjects').classList.remove('active');
+      document.getElementById('view-learn').classList.add('active');
+      document.getElementById('lesson-subject').textContent = `${subjectNames[subject]} • ICSE Class 6`;
+      generateLesson();
+    }
+
+    // Content generation
+    async function generateLesson() {
+      const topic = subjectTopics[appState.currentSubject][Math.floor(Math.random() * subjectTopics[appState.currentSubject].length)];
+      document.getElementById('lesson-title').textContent = topic;
+      document.getElementById('lesson-content').innerHTML = '<p style="color: var(--text-secondary);">Generating explanation...</p>';
+
+      try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 500,
+            messages: [{
+              role: "user",
+              content: `You are an expert ICSE Class 6 tutor for DPS Megacity Kolkata. Explain "${topic}" from ICSE Class 6 ${subjectNames[appState.currentSubject]} curriculum in simple language for a 6th grade student in India.
+
+Include:
+1. Simple definition
+2. Real-world example or application relevant to India
+3. Why it matters
+
+Keep it 2-3 short paragraphs. Use easy English.`
+            }]
+          })
+        });
+
+        const data = await response.json();
+        if(data.content && data.content[0].text) {
+          const text = data.content[0].text;
+          document.getElementById('lesson-content').innerHTML = `<p>${text.replace(/\n\n/g, '</p><p>')}</p>`;
+        }
+      } catch(e) {
+        document.getElementById('lesson-content').innerHTML = '<p style="color: var(--text-danger);">Unable to generate content. Please try again.</p>';
+      }
+    }
+
+    async function generateProblem() {
+      const topic = subjectTopics[appState.currentSubject][Math.floor(Math.random() * subjectTopics[appState.currentSubject].length)];
+      document.getElementById('problem-text').innerHTML = '<p style="color: var(--text-secondary);">Generating problem...</p>';
+      document.getElementById('user-answer').value = '';
+      document.getElementById('feedback').style.display = 'none';
+      document.getElementById('submit-btn').style.display = 'inline-block';
+      document.getElementById('next-btn').style.display = 'none';
+
+      try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 250,
+            messages: [{
+              role: "user",
+              content: `Create ONE practice problem for ICSE Class 6 ${subjectNames[appState.currentSubject]} on "${topic}".
+
+Format EXACTLY like this:
+PROBLEM: [problem]
+ANSWER: [answer]`
+            }]
+          })
+        });
+
+        const data = await response.json();
+        const text = data.content[0].text;
+        const problemMatch = text.match(/PROBLEM: (.+?)ANSWER:/s);
+        const problem = problemMatch ? problemMatch[1].trim() : text;
+        document.getElementById('problem-text').innerHTML = `<p>${problem}</p>`;
+        window.currentAnswer = text.match(/ANSWER: (.+?)$/s)?.[1]?.trim() || '';
+      } catch(e) {
+        document.getElementById('problem-text').innerHTML = '<p style="color: var(--text-danger);">Unable to load problem.</p>';
+      }
+    }
+
+    function checkAnswer() {
+      const answer = document.getElementById('user-answer').value.trim();
+      const errorDiv = document.getElementById('answer-error');
+
+      if(!answer) {
+        errorDiv.textContent = 'Please enter an answer';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      errorDiv.style.display = 'none';
+      const feedback = document.getElementById('feedback');
+      const isCorrect = answer.toLowerCase().includes(window.currentAnswer.toLowerCase()) || window.currentAnswer.toLowerCase().includes(answer.toLowerCase());
+
+      if(isCorrect) {
+        appState.correctAnswers++;
+        appState.totalPoints += 10;
+        appState.weeklyPoints += 10;
+        appState.currentStreak++;
+        feedback.classList.add('success');
+        feedback.classList.remove('danger');
+        feedback.innerHTML = '✓ Correct! (+10 points)';
+      } else {
+        appState.currentStreak = 0;
+        feedback.classList.add('danger');
+        feedback.classList.remove('success');
+        feedback.innerHTML = `Not quite. Answer: <strong>${window.currentAnswer}</strong>`;
+      }
+
+      feedback.style.display = 'block';
+      document.getElementById('submit-btn').style.display = 'none';
+      document.getElementById('next-btn').style.display = 'inline-block';
+      saveUserProgress();
+      updateStats();
+    }
+
+    function nextProblem() {
+      generateProblem();
+    }
+
+    async function generateQuestion() {
+      const topic = subjectTopics[appState.currentSubject][Math.floor(Math.random() * subjectTopics[appState.currentSubject].length)];
+      document.getElementById('question-text').innerHTML = '<p style="color: var(--text-secondary);">Generating question...</p>';
+      document.getElementById('q-answer').value = '';
+      document.getElementById('q-feedback').style.display = 'none';
+      document.getElementById('q-submit-btn').style.display = 'inline-block';
+      document.getElementById('q-next-btn').style.display = 'none';
+
+      try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 200,
+            messages: [{
+              role: "user",
+              content: `Create ONE quiz question for ICSE Class 6 ${subjectNames[appState.currentSubject]} on "${topic}".
+
+Format EXACTLY like this:
+QUESTION: [question]
+ANSWER: [answer]`
+            }]
+          })
+        });
+
+        const data = await response.json();
+        const text = data.content[0].text;
+        const qMatch = text.match(/QUESTION: (.+?)ANSWER:/s);
+        const question = qMatch ? qMatch[1].trim() : text;
+        document.getElementById('question-text').innerHTML = `<p>${question}</p>`;
+        window.quizAnswer = text.match(/ANSWER: (.+?)$/s)?.[1]?.trim() || '';
+      } catch(e) {
+        document.getElementById('question-text').innerHTML = '<p style="color: var(--text-danger);">Unable to load question.</p>';
+      }
+    }
+
+    function checkQuizAnswer() {
+      const answer = document.getElementById('q-answer').value.trim();
+      const errorDiv = document.getElementById('q-error');
+
+      if(!answer) {
+        errorDiv.textContent = 'Please enter an answer';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      errorDiv.style.display = 'none';
+      const feedback = document.getElementById('q-feedback');
+      const isCorrect = answer.toLowerCase().includes(window.quizAnswer.toLowerCase()) || window.quizAnswer.toLowerCase().includes(answer.toLowerCase());
+      const qNum = parseInt(document.getElementById('q-num').textContent);
+
+      if(isCorrect) {
+        appState.correctAnswers++;
+        feedback.classList.add('success');
+        feedback.classList.remove('danger');
+        feedback.innerHTML = '✓ Correct!';
+
+        if(qNum === 5) {
+          appState.totalPoints += 50;
+          appState.weeklyPoints += 50;
+          document.getElementById('q-submit-btn').style.display = 'none';
+          document.getElementById('q-next-btn').innerHTML = 'Quiz Complete! ✓';
+          feedback.innerHTML += ' <strong>All 5 correct! +50 bonus points!</strong>';
+        }
+      } else {
+        feedback.classList.add('danger');
+        feedback.classList.remove('success');
+        feedback.innerHTML = `Not quite. Answer: <strong>${window.quizAnswer}</strong>`;
+      }
+
+      feedback.style.display = 'block';
+      document.getElementById('q-submit-btn').style.display = 'none';
+      document.getElementById('q-next-btn').style.display = 'inline-block';
+      saveUserProgress();
+      updateStats();
+    }
+
+    function nextQuestion() {
+      const qNum = parseInt(document.getElementById('q-num').textContent);
+      if(qNum >= 5) {
+        switchView('dashboard');
+        return;
+      }
+      document.getElementById('q-num').textContent = qNum + 1;
+      generateQuestion();
+    }
+
+    function updateStats() {
+      document.getElementById('weekly-points').textContent = appState.weeklyPoints;
+    }
+
+    function updateDashboard() {
+      document.getElementById('total-points').textContent = appState.totalPoints;
+      document.getElementById('correct-count').textContent = appState.correctAnswers;
+      document.getElementById('streak-count').textContent = appState.currentStreak;
+
+      const subjectsDiv = document.getElementById('studied-subjects');
+      if(appState.subjectsStudied.size > 0) {
+        subjectsDiv.innerHTML = '';
+        appState.subjectsStudied.forEach(subject => {
+          const badge = document.createElement('span');
+          badge.className = 'badge';
+          badge.textContent = subject;
+          subjectsDiv.appendChild(badge);
+        });
+      }
+    }
+
+    // Initialize
+    init();
+  </script>
+</body>
+</html>

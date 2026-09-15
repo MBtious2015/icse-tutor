@@ -1,6 +1,5 @@
 {
   "buildCommand": "echo 'Deploying ICSE Tutor'",
   "outputDirectory": ".",
-  "public": true,
   "functions": {}
 }
